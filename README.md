@@ -1,4 +1,4 @@
-Rocket Chip on Zynq FPGAs
+Boom and Rocket Chip on Zynq FPGAs
 =========================
 
 This repository contains the files needed to run the RISC-V [rocket chip](https://github.com/ucb-bar/rocket-chip) on 
