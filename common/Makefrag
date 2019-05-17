@@ -43,11 +43,11 @@ $(addprefix src/verilog/,AsyncResetReg.v plusarg_reader.v): \
 	cp $< $@
 
 # Taken from rocket chip 2a5aeea. TODO: Maybe source this directly from makefrag?
-SBT ?= java -Xmx2G -Xss8M -XX:MaxPermSize=256M -jar $(ROCKET_DIR)/sbt-launch.jar ++$(SCALA_VERSION)
+SBT ?= java -Xmx4G -Xss8M -jar $(ROCKET_DIR)/sbt-launch.jar ++$(SCALA_VERSION)
 
 ROCKET_CLASSES ?= "$(ROCKET_DIR)/target/scala-$(SCALA_VERSION_MAJOR)/classes:$(ROCKET_DIR)/chisel3/target/scala-$(SCALA_VERSION_MAJOR)/*"
 FIRRTL_JAR ?= $(ROCKET_DIR)/firrtl/utils/bin/firrtl.jar
-FIRRTL ?= java -Xmx2G -Xss8M -XX:MaxPermSize=256M -cp $(ROCKET_CLASSES):$(FIRRTL_JAR) firrtl.Driver
+FIRRTL ?= java -Xmx4G -Xss8M -cp $(ROCKET_CLASSES):$(FIRRTL_JAR) firrtl.Driver
 
 $(FIRRTL_JAR): $(shell find $(ROCKET_DIR)/firrtl/src/main/scala -iname "*.scala" 2> /dev/null)
 	$(MAKE) -C $(ROCKET_DIR)/firrtl SBT="$(SBT)" root_dir=$(ROCKET_DIR)/firrtl build-scala

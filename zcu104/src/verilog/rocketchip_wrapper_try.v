@@ -5,22 +5,23 @@
 module rocketchip_wrapper ( SYSCLK_125_P,
                             SYSCLK_125_N,
 
-                            o_gpio_led_0,
-                            o_gpio_led_1,
-                            o_gpio_led_2,
-                            o_gpio_led_3);
+                            i_cpu_reset,
+                            i_gpio_pushbutton,
+                            i_gpio_dipswitch,
+                            o_gpio_led);
 
   input wire SYSCLK_125_P;
   input wire SYSCLK_125_N;
 
-  output wire o_gpio_led_0;
-  output wire o_gpio_led_1;
-  output wire o_gpio_led_2;
-  output wire o_gpio_led_3;
+  input wire        i_cpu_reset;
+  input wire [3:0]  i_gpio_pushbutton;
+  input wire [3:0]  i_gpio_dipswitch;
+  output wire [3:0] o_gpio_led;
 
-  assign o_gpio_led_0 = clk;
-  assign o_gpio_led_1 = rst;
-  assign o_gpio_led_2 = rstn;
+  assign o_gpio_led[0] = clk;
+  assign o_gpio_led[1] = rst;
+  assign o_gpio_led[2] = i_gpio_pushbutton[2];
+  assign o_gpio_led[3] = i_cpu_reset;
 
   wire [39:0] M_AXI_araddr;
   wire [1:0]  M_AXI_arburst;
@@ -167,7 +168,7 @@ module rocketchip_wrapper ( SYSCLK_125_P,
             .reset                          (rst),
             .io_ps_axi_slave_aw_ready       (M_AXI_awready),
             .io_ps_axi_slave_aw_valid       (M_AXI_awvalid),
-            .io_ps_axi_slave_aw_bits_id     (M_AXI_awid),
+            .io_ps_axi_slave_aw_bits_id     (M_AXI_awid[11:0]),
             .io_ps_axi_slave_aw_bits_addr   (M_AXI_awaddr[30:0]),
             .io_ps_axi_slave_aw_bits_len    (M_AXI_awlen),
             .io_ps_axi_slave_aw_bits_size   (M_AXI_awsize),
@@ -187,11 +188,11 @@ module rocketchip_wrapper ( SYSCLK_125_P,
             .io_ps_axi_slave_w_bits_last    (M_AXI_wlast),
             .io_ps_axi_slave_b_ready        (M_AXI_bready),
             .io_ps_axi_slave_b_valid        (M_AXI_bvalid),
-            .io_ps_axi_slave_b_bits_id      (M_AXI_bid),
+            .io_ps_axi_slave_b_bits_id      (M_AXI_bid[11:0]),
             .io_ps_axi_slave_b_bits_resp    (M_AXI_bresp),
             .io_ps_axi_slave_ar_ready       (M_AXI_arready),
             .io_ps_axi_slave_ar_valid       (M_AXI_arvalid),
-            .io_ps_axi_slave_ar_bits_id     (M_AXI_arid),
+            .io_ps_axi_slave_ar_bits_id     (M_AXI_arid[11:0]),
             .io_ps_axi_slave_ar_bits_addr   (M_AXI_araddr[30:0]),
             .io_ps_axi_slave_ar_bits_len    (M_AXI_arlen),
             .io_ps_axi_slave_ar_bits_size   (M_AXI_arsize),
@@ -206,7 +207,7 @@ module rocketchip_wrapper ( SYSCLK_125_P,
             .io_ps_axi_slave_ar_bits_qos    (4'b0),
             .io_ps_axi_slave_r_ready        (M_AXI_rready),
             .io_ps_axi_slave_r_valid        (M_AXI_rvalid),
-            .io_ps_axi_slave_r_bits_id      (M_AXI_rid),
+            .io_ps_axi_slave_r_bits_id      (M_AXI_rid[11:0]),
             .io_ps_axi_slave_r_bits_data    (M_AXI_rdata),
             .io_ps_axi_slave_r_bits_resp    (M_AXI_rresp),
             .io_ps_axi_slave_r_bits_last    (M_AXI_rlast),
@@ -299,7 +300,8 @@ module rocketchip_wrapper ( SYSCLK_125_P,
                     .S_AXI_arqos    (S_AXI_arqos),
                     .S_AXI_arready  (S_AXI_arready),
                     .S_AXI_arsize   (S_AXI_arsize),
-                    .S_AXI_aruser   (S_AXI_aruser),
+                    //.S_AXI_aruser   (S_AXI_aruser),
+                    .S_AXI_aruser   (1'b0),
                     .S_AXI_arvalid  (S_AXI_arvalid),
                     .S_AXI_awaddr   (S_AXI_awaddr),
                     .S_AXI_awburst  (S_AXI_awburst),
@@ -311,7 +313,8 @@ module rocketchip_wrapper ( SYSCLK_125_P,
                     .S_AXI_awqos    (S_AXI_awqos),
                     .S_AXI_awready  (S_AXI_awready),
                     .S_AXI_awsize   (S_AXI_awsize),
-                    .S_AXI_awuser   (S_AXI_awuser),
+                    //.S_AXI_awuser   (S_AXI_awuser),
+                    .S_AXI_awuser   (1'b0),
                     .S_AXI_awvalid  (S_AXI_awvalid),
                     .S_AXI_bid      (S_AXI_bid),
                     .S_AXI_bready   (S_AXI_bready),

@@ -79,3 +79,19 @@ class SmallBoomZynqConfig extends Config(
   new WithBootROM ++ new WithZynqAdapter ++ new _root_.boom.system.SmallBoomConfig)
 class MediumBoomZynqConfig extends Config(
   new WithBootROM ++ new WithZynqAdapter ++ new _root_.boom.system.MediumBoomConfig)
+
+class WithZynqAdapterZCU104 extends Config((site, here, up) => {
+  case SerialFIFODepth => 16
+  case ResetCycles => 10
+  case ZynqAdapterBase => BigInt(0x43C00000L)
+  case ExtMem => up(ExtMem, site) map (_.copy(idBits = 6))
+  case ExtIn => up(ExtIn, site) map (_.copy(beatBytes = 4, idBits = 16))
+  case BlockDeviceKey => BlockDeviceConfig(nTrackers = 2)
+  case BlockDeviceFIFODepth => 16
+  case NetworkFIFODepth => 16
+})
+
+class SmallBoomZynqConfigZCU104 extends Config(
+  new WithBootROM ++ new WithZynqAdapterZCU104 ++ new _root_.boom.system.SmallBoomConfig)
+class MediumBoomZynqConfigZCU104 extends Config(
+  new WithBootROM ++ new WithZynqAdapterZCU104 ++ new _root_.boom.system.MediumBoomConfig)
